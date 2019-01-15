@@ -1,0 +1,37 @@
+Effacer règles existantes :
+sudo iptables -F
+
+sudo iptables -L
+
+Refuser paquets entrée/sortie/transfert :
+sudo iptables -P INPUT DROP/OUTPUT DROP/FORWARD DROP
+
+Ping non fonctionnel car refus de paquets via la commande précédente
+
+Limiter trafic à envoi et réponse de ping (protocole icmp) :
+sudo iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+sudo iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
+
+sudo iptables -A INPUT/OUTPUT -p icmp -j ACCEPT
+
+Supprimer permission 1 de INPUT :
+sudo iptables -D INPUT 1
+
+Protocoles indispensables :
+HTTPS port 80
+DNS port 53
+
+Faire fonctionner correctement le navigateur :
+sudo iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A OUTPUT -p ucp --dport 53 -j ACCEPT
+sudo iptables -A OUTPUT -m state --state RELATED, ESTABLISHED -j ACCEPT
+sudo iptables -A INPUT -m state --state RELATED, ESTABLISHED -j ACCEPT
+
+Autoriser accès au serveur Web de la machine :
+sudo iptables -A OUTPUT -m state --state NEW ESTABLISHED -j ACCEPT
+
+Enregistrer les trames entrantes, provenant d'une @IP :
+iptables -A INPUT -s *IP src* -j LOG
+
+Pour mettre une règle en première position:
+iptables -I INPUT 1 --reste règle--
